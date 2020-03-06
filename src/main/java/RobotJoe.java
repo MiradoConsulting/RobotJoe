@@ -26,7 +26,7 @@ public class RobotJoe extends AdvancedRobot {
                     robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));
             setAhead((e.getDistance() - 140) * getHeadingRadians());
             setFire(3);
-        } else {// if we are close enough...
+        } else {
             gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
             setTurnGunRightRadians(gunTurnAmt);// turn our gun
             setTurnLeft(-90 - e.getBearing()); // turn perpendicular to the enemy
