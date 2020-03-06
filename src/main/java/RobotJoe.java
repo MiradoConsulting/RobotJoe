@@ -16,9 +16,7 @@ public class RobotJoe extends AdvancedRobot {
         double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - absBearing);
         double gunTurn;
         setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
-        if (Math.random() > .9) {
-            setMaxVelocity((12 * Math.random()) + 12);
-        }
+
         if (e.getDistance() > 150) {
             gunTurn = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);
             setTurnGunRightRadians(gunTurn);
@@ -26,7 +24,7 @@ public class RobotJoe extends AdvancedRobot {
                     robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));
             setAhead((e.getDistance() - 140) * getHeadingRadians());
             setFire(3);
-        } else {
+        } else {// if we are close enough...
             gunTurn = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
             setTurnGunRightRadians(gunTurn);// turn our gun
             setTurnLeft(-90 - e.getBearing()); // turn perpendicular to the enemy
@@ -36,6 +34,6 @@ public class RobotJoe extends AdvancedRobot {
     }
 
     public void onHitWall(HitWallEvent e) {
-        setAhead(getHeadingRadians()+90); 
+        setAhead(getHeadingRadians());
     }
 }
