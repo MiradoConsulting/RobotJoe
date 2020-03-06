@@ -21,16 +21,16 @@ public class RobotJoe extends Robot {
         // Robot main loop
         while (true) {
             scan();
-            ahead(Math.random() * 150);
+            ahead(Math.random());
             turnGunRight(360);
-            back(Math.random() * 150);
+            back(Math.random());
             turnGunRight(360);
-            turnLeft(Math.random() * 150);
+            turnLeft(Math.random());
             turnGunRight(360);
-            turnRight(Math.random() * 150);
+            turnRight(Math.random());
         }
     }
-    
+
     /**
      * onScannedRobot: What to do when you see another robot
      */
