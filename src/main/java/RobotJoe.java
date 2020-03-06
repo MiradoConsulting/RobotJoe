@@ -14,21 +14,21 @@ public class RobotJoe extends AdvancedRobot {
     public void onScannedRobot(ScannedRobotEvent e) {
         double absBearing = e.getBearingRadians() + getHeadingRadians();
         double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - absBearing);
-        double gunTurnAmt;
+        double gunTurn;
         setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
         if (Math.random() > .9) {
             setMaxVelocity((12 * Math.random()) + 12);
         }
         if (e.getDistance() > 150) {
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);
-            setTurnGunRightRadians(gunTurnAmt);
+            gunTurn = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);
+            setTurnGunRightRadians(gunTurn);
             setTurnRightRadians(
                     robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));
             setAhead((e.getDistance() - 140) * getHeadingRadians());
             setFire(3);
         } else {
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
-            setTurnGunRightRadians(gunTurnAmt);// turn our gun
+            gunTurn = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
+            setTurnGunRightRadians(gunTurn);// turn our gun
             setTurnLeft(-90 - e.getBearing()); // turn perpendicular to the enemy
             setAhead((e.getDistance() - 140) * getHeadingRadians());// move forward
             setFire(3);
@@ -36,6 +36,6 @@ public class RobotJoe extends AdvancedRobot {
     }
 
     public void onHitWall(HitWallEvent e) {
-        setAhead(-getHeadingRadians()); 
+        setAhead(getHeadingRadians()+90); 
     }
 }
