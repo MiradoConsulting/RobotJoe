@@ -1,70 +1,41 @@
 import robocode.*;
 import java.awt.Color;
 
-// API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
-/**
- * RobotJoe - a robot by Georgios
- */
-public class RobotJoe extends Robot {
-    /**
-     * run: RobotJoe's default behavior
-     */
+public class RobotJoe extends AdvancedRobot {
+    
     public void run() {
-        // Initialization of the robot should be put here
-
-        // After trying out your robot, try uncommenting the import at the top,
-        // and the next line:
-
         setColors(Color.pink, Color.orange, Color.green); // body,gun,radar
-
-        // Robot main loop
         while (true) {
-            cantTouchThis();
+            turnRadarRight(360);
         }
     }
 
-    private void cantTouchThis() {
-        int rand = (int) (Math.random() * ((4 - 1) + 1)) + 1;
-        if (rand == 1) {
-            ahead(Math.random());
-        } else if (rand == 2) {
-            back(Math.random());
-        } else if (rand == 3) {
-            turnLeft(Math.random());
-        } else {
-            turnRight(Math.random());
-        }
-    }
-
-    /**
-     * onScannedRobot: What to do when you see another robot
-     */
     public void onScannedRobot(ScannedRobotEvent e) {
-        double scanned = e.getHeading();
-        double myHeading = getHeading();
-        turnGunRight(e.getBearingRadians());
-        if (scanned - myHeading > 0) {
-            turnLeft(scanned - myHeading);
-        } else {
-            turnRight(scanned - myHeading);
+        double absBearing = e.getBearingRadians() + getHeadingRadians();
+        double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - absBearing);
+        double gunTurnAmt;
+        setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
+        if (Math.random() > .9) {
+            setMaxVelocity((12 * Math.random()) + 12);
         }
-        fire(Rules.MAX_BULLET_POWER);
+        if (e.getDistance() > 150) {
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);
+            setTurnGunRightRadians(gunTurnAmt);
+            setTurnRightRadians(
+                    robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));
+            setAhead((e.getDistance() - 140) * getHeadingRadians());
+            setFire(3);
+        } else {// if we are close enough...
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
+            setTurnGunRightRadians(gunTurnAmt);// turn our gun
+            setTurnLeft(-90 - e.getBearing()); // turn perpendicular to the enemy
+            setAhead((e.getDistance() - 140) * getHeadingRadians());// move forward
+            setFire(3);
+        }
     }
 
-    /**
-     * onHitByBullet: What to do when you're hit by a bullet
-     */
-    public void onHitByBullet(HitByBulletEvent e) {
-        // Replace the next line with any behavior you would like
-        back(10);
-    }
-
-    /**
-     * onHitWall: What to do when you hit a wall
-     */
     public void onHitWall(HitWallEvent e) {
-        double heading = getHeading();
-
+        setAhead(-getHeadingRadians()); 
     }
 }
