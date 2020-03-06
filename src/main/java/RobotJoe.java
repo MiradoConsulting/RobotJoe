@@ -16,17 +16,23 @@ public class RobotJoe extends Robot {
         // After trying out your robot, try uncommenting the import at the top,
         // and the next line:
 
-        setColors(Color.pink, Color.grey, Color.green); // body,gun,radar
+        setColors(Color.pink, Color.blue, Color.green); // body,gun,radar
 
         // Robot main loop
         while (true) {
-            scan();
+            cantTouchThis();
+        }
+    }
+
+    private void cantTouchThis() {
+        int rand = (int) (Math.random() * ((4 - 1) + 1)) + 1;
+        if (rand == 1) {
             ahead(Math.random());
-            turnGunRight(360);
+        } else if (rand == 2) {
             back(Math.random());
-            turnGunRight(360);
+        } else if (rand == 3) {
             turnLeft(Math.random());
-            turnGunRight(360);
+        } else {
             turnRight(Math.random());
         }
     }
@@ -35,8 +41,15 @@ public class RobotJoe extends Robot {
      * onScannedRobot: What to do when you see another robot
      */
     public void onScannedRobot(ScannedRobotEvent e) {
-        // Replace the next line with any behavior you would like
-        fire(3);
+        double scanned = e.getHeading();
+        double myHeading = getHeading();
+        turnGunRight(e.getBearingRadians());
+        if (scanned - myHeading > 0) {
+            turnLeft(scanned - myHeading);
+        } else {
+            turnRight(scanned - myHeading);
+        }
+        fire(Rules.MAX_BULLET_POWER);
     }
 
     /**
@@ -51,7 +64,7 @@ public class RobotJoe extends Robot {
      * onHitWall: What to do when you hit a wall
      */
     public void onHitWall(HitWallEvent e) {
-        // Replace the next line with any behavior you would like
-        back(20);
+        double heading = getHeading();
+
     }
 }
